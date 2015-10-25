@@ -52,10 +52,6 @@ app.controller('MainCtrl', ['$scope', 'posts', function($scope, posts){
     };
 }]);//end of controller
 
-app.controller('PostsCtrl', [
-'$scope',
-'$stateParams',
-'posts',
-function($scope, $stateParams, posts){
-
+app.controller('PostsCtrl', ['$scope', '$stateParams', 'posts', function($scope, $stateParams, posts){
+    $scope.post = posts.posts[$stateParams.id];
 }]);//end of controller
