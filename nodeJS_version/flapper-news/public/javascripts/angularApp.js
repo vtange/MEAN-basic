@@ -19,7 +19,12 @@ function($stateProvider, $urlRouterProvider) {
     .state('posts', {
       url: '/posts/{id}',
       templateUrl: '/posts.html',
-      controller: 'PostsCtrl'
+      controller: 'PostsCtrl',
+      resolve: {
+        post: ['$stateParams', 'posts', function($stateParams, posts) {
+          return posts.get($stateParams.id);
+        }]
+      }
     });
 
 
@@ -35,6 +40,12 @@ app.factory('posts', ['$http', function($http){
               angular.copy(data, o.posts);
             });
           };
+                      //get one post
+                      o.get = function(id) {
+                          return $http.get('/posts/' + id).then(function(res){
+                            return res.data;
+                          });
+                        };
                       //create posts
                       o.create = function(post) {
                           return $http.post('/posts', post).success(function(data){
@@ -76,8 +87,8 @@ app.controller('MainCtrl', ['$scope', 'posts', function($scope, posts){
     };
 }]);//end of controller
 
-app.controller('PostsCtrl', ['$scope', '$stateParams', 'posts', function($scope, $stateParams, posts){
-    $scope.post = posts.posts[$stateParams.id];
+app.controller('PostsCtrl', ['$scope', 'post', 'posts', function($scope, post, posts){
+    $scope.post = post;
     $scope.addPost = function(){
       if(!$scope.title || $scope.title === '') { return; }
       posts.create({
