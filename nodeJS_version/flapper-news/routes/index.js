@@ -24,6 +24,14 @@ router.param('post', function(req, res, next, id) {
   });
 });
 
+router.get('/posts', function(req, res, next) {
+  Post.find(function(err, posts){
+    if(err){ return next(err); }
+
+    res.json(posts);
+  });
+});
+
 router.get('/posts/:post', function(req, res) {
   res.json(req.post);
 });
