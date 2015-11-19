@@ -34,6 +34,7 @@ function($stateProvider, $urlRouterProvider) {
 app.factory('posts', ['$http', function($http){
   var o = {
     posts: []
+  };
       //get posts
         o.getAll = function() {
             return $http.get('/posts').success(function(data){
@@ -70,7 +71,6 @@ app.factory('posts', ['$http', function($http){
                               comment.upvotes += 1;
                             });
                         };
-  };
   return o;
 }]);//end of service
 
