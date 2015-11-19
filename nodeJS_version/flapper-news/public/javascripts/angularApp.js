@@ -59,6 +59,17 @@ app.factory('posts', ['$http', function($http){
                               post.upvotes += 1;
                             });
                         };
+                      //add comment
+                      o.addComment = function(id, comment) {
+                          return $http.post('/posts/' + id + '/comments', comment);
+                        };
+                      //upvote comment
+                      o.upvoteComment = function(post, comment) {
+                          return $http.put('/posts/' + post._id + '/comments/'+ comment._id + '/upvote')
+                            .success(function(data){
+                              comment.upvotes += 1;
+                            });
+                        };
   };
   return o;
 }]);//end of service
@@ -100,12 +111,16 @@ app.controller('PostsCtrl', ['$scope', 'post', 'posts', function($scope, post, p
     };
     $scope.addComment = function(){
       if($scope.body === '') { return; }
-      $scope.post.comments.push({
+      posts.addComment(post._id, {
         body: $scope.body,
         author: 'user',
-        upvotes: 0
+      }).success(function(comment) {
+        $scope.post.comments.push(comment);
       });
       $scope.body = '';
+    };
+    $scope.incrementUpvotes = function(comment){
+      posts.upvoteComment(post, comment);
     };
     
 }]);//end of controller
