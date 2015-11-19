@@ -72,12 +72,19 @@ router.param('comment', function(req, res, next, id) {
     return next();
   });
 });
-//gets comments list
+//gets comments list    UNIQUE TO COMMENTS
 router.get('/posts/:post', function(req, res, next) {
   req.post.populate('comments', function(err, post) {
     if (err) { return next(err); }
 
     res.json(post);
+  });
+});
+router.get('/posts/:post/comments', function(req, res, next) {
+  Comment.find(function(err, comments){
+    if(err){ return next(err); }
+
+    res.json(comments);
   });
 });
 //gets ???
