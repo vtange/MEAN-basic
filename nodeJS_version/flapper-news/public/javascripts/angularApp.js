@@ -29,11 +29,18 @@ function($stateProvider, $urlRouterProvider) {
 app.factory('posts', ['$http', function($http){
   var o = {
     posts: []
+      //get posts
         o.getAll = function() {
             return $http.get('/posts').success(function(data){
               angular.copy(data, o.posts);
             });
           };
+                      //create posts
+                      o.create = function(post) {
+                          return $http.post('/posts', post).success(function(data){
+                            o.posts.push(data);
+                          });
+                        };
   };
   return o;
 }]);//end of service
@@ -64,6 +71,15 @@ app.controller('MainCtrl', ['$scope', 'posts', function($scope, posts){
 
 app.controller('PostsCtrl', ['$scope', '$stateParams', 'posts', function($scope, $stateParams, posts){
     $scope.post = posts.posts[$stateParams.id];
+    $scope.addPost = function(){
+      if(!$scope.title || $scope.title === '') { return; }
+      posts.create({
+        title: $scope.title,
+        link: $scope.link,
+      });
+      $scope.title = '';
+      $scope.link = '';
+    };
     $scope.addComment = function(){
       if($scope.body === '') { return; }
       $scope.post.comments.push({
