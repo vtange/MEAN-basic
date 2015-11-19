@@ -78,18 +78,11 @@ app.controller('MainCtrl', ['$scope', 'posts', function($scope, posts){
     $scope.test = 'Hello world!';
     $scope.posts = posts.posts;
     $scope.addPost = function(){
-      if(!$scope.title || $scope.title === '') { return; } // return immediately if empty
-    //with mock comments
-    $scope.posts.push({
-      title: $scope.title,
-      link: $scope.link,
-      upvotes: 0,
-      comments: [
-        {author: 'Joe', body: 'Cool post!', upvotes: 0},
-        {author: 'Bob', body: 'Great idea but everything is wrong!', upvotes: 0}
-      ]
-    });
-    //reset input
+      if(!$scope.title || $scope.title === '') { return; }
+      posts.create({
+        title: $scope.title,
+        link: $scope.link,
+      });
       $scope.title = '';
       $scope.link = '';
     };
@@ -100,15 +93,6 @@ app.controller('MainCtrl', ['$scope', 'posts', function($scope, posts){
 
 app.controller('PostsCtrl', ['$scope', 'post', 'posts', function($scope, post, posts){
     $scope.post = post;
-    $scope.addPost = function(){
-      if(!$scope.title || $scope.title === '') { return; }
-      posts.create({
-        title: $scope.title,
-        link: $scope.link,
-      });
-      $scope.title = '';
-      $scope.link = '';
-    };
     $scope.addComment = function(){
       if($scope.body === '') { return; }
       posts.addComment(post._id, {
