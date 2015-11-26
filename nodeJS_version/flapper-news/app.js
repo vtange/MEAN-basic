@@ -1,12 +1,18 @@
+/*---------------------*/
+/*  LOAD DEPENDENCIES  */
+/*---------------------*/
 var express = require('express');
-var path = require('path');
+var path = require('path');             //handles and mutates file and folder paths
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var app = express();//app main body
 
+var app = express();/*-----START APP-----*/
+/*---------------------*/
+/*  LOAD MODELS       */
+/*---------------------*/
 var mongoose = require('mongoose');
 require('./models/Posts');
 require('./models/Comments');

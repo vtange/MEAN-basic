@@ -6,13 +6,13 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
-    "body-parser": "~1.13.2",
-    "cookie-parser": "~1.3.5",
-    "debug": "~2.2.0",
-    "ejs": "~2.3.3",
-    "express": "~4.13.1",
-    "mongoose": "^4.2.2",
-    "morgan": "~1.6.1",
-    "serve-favicon": "~2.3.0"
+    "express": "~4.13.1",       //main structure, includes "path"
+    "serve-favicon": "~2.3.0",  //enable custom favicon
+    "morgan": "~1.6.1",         //custom console.logger
+    "cookie-parser": "~1.3.5",  //parses cookies. replaced with "express-session" Mar 2015
+    "body-parser": "~1.13.2",   //parses JSON bodies. obsolete and vulnerable to infinite temp file attack
+    "debug": "~2.2.0",          //another custom console.logger
+    "ejs": "~2.3.3",            //use EJS files for direct HTML conversion
+    "mongoose": "^4.2.2"        //mongoDB
   }
 }
