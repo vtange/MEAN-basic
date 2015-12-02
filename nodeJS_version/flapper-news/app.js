@@ -11,31 +11,37 @@ var bodyParser = require('body-parser');
 
 var app = express();/*-----START APP-----*/
 /*---------------------*/
-/*  LOAD MODELS       */
+/*  LOAD MODELS        */
 /*---------------------*/
 var mongoose = require('mongoose');
 require('./models/Posts');
 require('./models/Comments');
-
+/*---------------------*/
+/*  CONNECT TO DB 'news'       */
+/*---------------------*/
 mongoose.connect('mongodb://localhost/news');
-
-var routes = require('./routes/index');//fire index.js
-var users = require('./routes/users');//fire users.js
-
-// view engine setup
+/*---------------------*/
+/*  LOAD ROUTES        */
+/*---------------------*/
+var routes = require('./routes/index');                 //fire index.js router
+var users = require('./routes/users');                  //fire users.js
+/*---------------------*/
+/*  DEFINE VIEW ENGINE, FILELOCATIONS       */
+/*---------------------*/
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
-
-app.use('/', routes);
-app.use('/users', users);
+//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));//use favicon in public folder (commented since I don't have one)
+app.use(logger('dev'));                                 // use the 'dev' logger from morgan
+app.use(bodyParser.json());                             // bodyParser always parses JSON?
+app.use(bodyParser.urlencoded({ extended: false }));    // no encoding from bodyParser?
+app.use(cookieParser());                                // use cookieParser
+app.use(express.static(path.join(__dirname, 'public')));//use all files in public folder
+/*---------------------*/
+/*  USE ROUTES/SERVE FILES       */
+/*---------------------*/
+app.use('/', routes);                                   // always use routes/index.js for all urls with '/'
+app.use('/users', users);                               // always use routes/users.js for all urls with '/users'
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -43,9 +49,7 @@ app.use(function(req, res, next) {
   err.status = 404;
   next(err);
 });
-
 // error handlers
-
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
