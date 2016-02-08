@@ -3,7 +3,9 @@
 #Takeaways
 
  - **This app uses client-side Angular ui.Router to control controllers and views.
-
+```
+ GET "/" -> .use index.js routes to supplement the $http requests from AngularApp.js, which controls multiple webpages
+```
  - using ```app.param([name], callback)``` to fetch data.
  
  - using ```Model.findById(id)```
