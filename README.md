@@ -93,7 +93,22 @@ router.get('/posts/:post', function (req, res) {
 	});
 });
 ```
-
+ - use ```angular.copy(data, $scope.putDataHere)``` instead of ```$scope.putDataHere = data```
+```
+         == angularApp.js (clientside JS, angular service) ==
+  var o = {
+    posts: []
+  };
+//get posts, run by $stateProvider resolve
+   o.getAll = function() {
+       return $http.get('/posts').success(function(data){
+         angular.copy(data, o.posts);
+       });
+     };
+     
+     === HTML Template ===
+       <div ng-repeat="post in posts ... (from service)
+```
 
  - using express Router```.param``` with ```Model.findById(id)``` instead if ```req.params.(blah)```. app.param is depreciated in Express 4.11x ->
  
