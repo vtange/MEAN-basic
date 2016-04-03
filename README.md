@@ -4,24 +4,68 @@
 
  - **This app uses client-side Angular ui.Router to control controllers and views.
 ```
- GET "/" -> .use index.js routes to supplement the $http requests from AngularApp.js, which controls multiple webpages
+ GET "/" -> always send index.js, AngularApp.js controls multiple webpages
+ Other Routes just work with DB.
 ```
- - using ```app.param([name], callback)``` to fetch data.
+ - using express Router```.param``` with ```Model.findById(id)``` instead if ```req.params.(blah)```. app.param is depreciated in Express 4.11x ->
  
- - using ```Model.findById(id)```
+ ```
+         == index.js (routes file) ==
+ /*------*/
+/* PARAM */
+/*------*/
+// Runs for all post related actions
+router.param('post', function (req, res, next, id) {
+	var query = Post.findById(id);
+
+	query.exec( function (err, post) {
+		if (err) { return next(err); }
+		if (!post) {
+			return next('Could not find post');
+		}
+
+		req.post = post;
+		return next();
+	});
+});
+
+////Example use, note how we can use 'req.comment' in the PUT request.
+
+        == index.js (routes file) ==
+CLIENT
+
+   //upvote comment
+   o.upvoteComment = function(post, comment) {
+       return $http.put('/posts/' + post._id + '/comments/'+ comment._id + '/upvote')
+         .success(function(data){
+           comment.upvotes += 1;
+         });
+     };
+     
+ SERVER
+ 
+/* Upvote a comment */
+router.put('/posts/:post/comments/:comment/upvote', function (req, res, next) {
+	req.comment.upvote( function (err, comment) {
+		if (err) { return next(err); }
+		res.json(comment);
+	});
+});
+ ```
  
  - Methods in Model Objects, being triggered by POST requests.
  
  ```
-                /* Upvote a comment */
-                router.put('/posts/:post/comments/:comment/upvote', function (req, res, next) {
-                    req.comment.upvote( function (err, comment) {
-                        if (err) { return next(err); }
-                        res.json(comment);
-                    });
-                });
+        == index.js (routes file) ==
+        /* Upvote a comment */
+        router.put('/posts/:post/comments/:comment/upvote', function (req, res, next) {
+            req.comment.upvote( function (err, comment) {
+                if (err) { return next(err); }
+                res.json(comment);
+            });
+        });
                 
-        //Comments.js   
+        == Comments.js ==
         CommentSchema.methods.upvote = function(cb) {
           this.upvotes += 1;
           this.save(cb);
